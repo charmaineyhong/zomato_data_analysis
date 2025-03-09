@@ -3,7 +3,7 @@ import json
 
 def process_events():
     try:
-        with open("C:/Users/charm/Downloads/restaurant_data.json", "r", encoding="utf-8") as f:
+        with open("data/restaurant_data.json", "r", encoding="utf-8") as f:
             data = json.load(f)
     except Exception as e:
         print("Error loading JSON file:", e)

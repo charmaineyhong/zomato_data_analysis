@@ -3,7 +3,7 @@ import json
 
 def load_data():
     try:
-        with open("C:/Users/charm/Downloads/restaurant_data.json", "r", encoding="utf-8") as f:
+        with open("data/restaurant_data.json", "r", encoding="utf-8") as f:
             data = json.load(f)
     except Exception as e:
         print("Error loading JSON:", e)
@@ -45,7 +45,7 @@ def load_data():
     restaurants_df = pd.DataFrame(records)
     
     try:
-        country_codes = pd.read_excel("C:/Users/charm/Downloads/Country-Code.xlsx")
+        country_codes = pd.read_excel("data/Country-Code.xlsx")
     except Exception as e:
         print("Error loading Country-Code.xlsx:", e)
         raise
