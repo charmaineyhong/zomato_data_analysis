@@ -1,6 +1,6 @@
 import pandas as pd
 
-def load_restaurants(filepath='"C:/Users/charm/Downloads/restaurant_data.json"'):
+def load_restaurants(filepath="C:/Users/charm/Downloads/restaurant_data.json"):
     """
     Load the restaurant data
 
@@ -24,7 +24,7 @@ def load_restaurants(filepath='"C:/Users/charm/Downloads/restaurant_data.json"')
         print(f"An unexpected error occurred: {e}")
         raise
 
-def load_country_codes(filepath='"C:/Users/charm/Downloads/Country-Code.xlsx"'):
+def load_country_codes(filepath="C:/Users/charm/Downloads/Country-Code.xlsx"):
     """
     Load the country codes
 
