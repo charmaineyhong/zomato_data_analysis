@@ -1,24 +1,89 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, mock_open
 import pandas as pd
 from src.event_processor import process_events
 
 class TestEventProcessor(unittest.TestCase):
     def setUp(self):
-        self.sample_events = pd.DataFrame({
-            'Event Id': [101, 102, 103, 104],
-            'Restaurant Id': [1, 2, 3, 4],
-            'Restaurant Name': ['Event A', 'Event B', 'Event C', 'Event D'],
-            'Photo URL': ['url1', None, 'url3', 'url4'], 
-            'Event Title': ['Title A', 'Title B', 'Title C', 'Title D'],
-            'Event Start Date': ['2019-03-31', '2019-04-15', '2019-04-30', '2019-05-01'],
-            'Event End Date': ['2019-04-02', '2019-04-20', '2019-05-02', '2019-05-10']
-        })
+        self.sample_json = [{
+            "restaurants": [
+                {
+                    "restaurant": {
+                        "id": "1",
+                        "name": "Event A",
+                        "zomato_events": [
+                            {
+                                "event": {
+                                    "event_id": 101,
+                                    "title": "Title A",
+                                    "start_date": "2019-03-31",
+                                    "end_date": "2019-04-02",
+                                    "photos": [{"photo": {"url": "url1"}}]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "restaurant": {
+                        "id": "2",
+                        "name": "Event B",
+                        "zomato_events": [
+                            {
+                                "event": {
+                                    "event_id": 102,
+                                    "title": "Title B",
+                                    "start_date": "2019-04-15",
+                                    "end_date": "2019-04-20",
+                                    "photos": [{"photo": {}}]  
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "restaurant": {
+                        "id": "3",
+                        "name": "Event C",
+                        "zomato_events": [
+                            {
+                                "event": {
+                                    "event_id": 103,
+                                    "title": "Title C",
+                                    "start_date": "2019-04-30",
+                                    "end_date": "2019-05-02",
+                                    "photos": [{"photo": {"url": "url3"}}]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "restaurant": {
+                        "id": "4",
+                        "name": "Event D",
+                        "zomato_events": [
+                            {
+                                "event": {
+                                    "event_id": 104,
+                                    "title": "Title D",
+                                    "start_date": "2019-05-01",
+                                    "end_date": "2019-05-10",
+                                    "photos": [{"photo": {"url": "url4"}}]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }]
 
     @patch('pandas.DataFrame.to_csv')
-    @patch('pandas.read_json')
-    def test_process_successful(self, mock_read_json, mock_to_csv):
-        mock_read_json.return_value = self.sample_events
+    @patch('json.load')
+    @patch('builtins.open', new_callable=mock_open, read_data="dummy")
+    def test_process_successful(self, mock_file, mock_json_load, mock_to_csv):
+        mock_json_load.return_value = self.sample_json
+
         result = process_events()
 
         expected_ids = [101, 102, 103]
@@ -33,28 +98,43 @@ class TestEventProcessor(unittest.TestCase):
 
         mock_to_csv.assert_called_once_with('outputs/restaurant_events.csv', index=False)
 
-    @patch('pandas.read_json', side_effect=FileNotFoundError("File not found"))
-    def test_file_not_found_error(self, mock_read_json):
+    @patch('builtins.open', side_effect=FileNotFoundError("File not found"))
+    def test_file_not_found_error(self, mock_open):
         with self.assertRaises(FileNotFoundError):
             process_events()
 
-    @patch('pandas.read_json', return_value=pd.DataFrame())
-    def test_empty_data(self, mock_read_json):
-        with self.assertRaises(KeyError):
-            process_events()
+    @patch('json.load')
+    @patch('builtins.open', new_callable=mock_open, read_data="dummy")
+    def test_empty_data(self, mock_file, mock_json_load):
+        mock_json_load.return_value = [{"restaurants": []}]
+        result = process_events()
+        self.assertTrue(result.empty, "Expected an empty DataFrame for empty input.")
 
-    @patch('pandas.read_json')
-    def test_invalid_date_format(self, mock_read_json):
-        invalid_date_data = pd.DataFrame({
-            'Event Id': [201],
-            'Restaurant Id': [10],
-            'Restaurant Name': ['Invalid Date Event'],
-            'Photo URL': ['url_invalid'],
-            'Event Title': ['Invalid Event'],
-            'Event Start Date': ['not_a_date'],
-            'Event End Date': ['not_a_date']
-        })
-        mock_read_json.return_value = invalid_date_data
+    @patch('json.load')
+    @patch('builtins.open', new_callable=mock_open, read_data="dummy")
+    def test_invalid_date_format(self, mock_file, mock_json_load):
+        invalid_json = [{
+            "restaurants": [
+                {
+                    "restaurant": {
+                        "id": "10",
+                        "name": "Invalid Date Event",
+                        "zomato_events": [
+                            {
+                                "event": {
+                                    "event_id": 201,
+                                    "title": "Invalid Event",
+                                    "start_date": "not_a_date",
+                                    "end_date": "not_a_date",
+                                    "photos": [{"photo": {"url": "url_invalid"}}]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }]
+        mock_json_load.return_value = invalid_json
         
         result = process_events()
         self.assertTrue(result.empty, "Expected an empty DataFrame due to invalid date formats.")
