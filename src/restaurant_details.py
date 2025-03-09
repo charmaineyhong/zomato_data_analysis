@@ -17,8 +17,8 @@ def load_data():
         restaurant = item.get("restaurant", {})
         rec_id = restaurant.get("id", "NA")
         name = restaurant.get("name", "NA")
-        country = "India"
         location = restaurant.get("location", {})
+        country_id = location.get("country_id", "NA")
         city = location.get("city", "NA")
         user_rating = restaurant.get("user_rating", {})
         rating_votes = user_rating.get("votes", "NA")
@@ -33,7 +33,7 @@ def load_data():
         record = {
             "Restaurant Id": rec_id,
             "Restaurant Name": name,
-            "Country": country,
+            "Country_ID": country_id,
             "City": city,
             "User Rating Votes": rating_votes,
             "User Aggregate Rating": aggregate_rating,
@@ -46,6 +46,7 @@ def load_data():
     
     try:
         country_codes = pd.read_excel("data/Country-Code.xlsx")
+        print("Country codes data loaded successfully")
     except Exception as e:
         print("Error loading Country-Code.xlsx:", e)
         raise
@@ -58,7 +59,12 @@ def process_restaurant_details():
     print("Restaurants DataFrame columns:", restaurants.columns.tolist())
     print("Country Codes DataFrame columns:", country_codes.columns.tolist())
     
-    merged_data = pd.merge(restaurants, country_codes, on='Country', how='inner')
+    restaurants['Country_ID'] = pd.to_numeric(restaurants['Country_ID'], errors='coerce')
+    country_codes['Country Code'] = pd.to_numeric(country_codes['Country Code'], errors='coerce')
+    
+    merged_data = pd.merge(restaurants, country_codes, left_on='Country_ID', right_on='Country Code', how='inner')
+    merged_data.drop(columns=['Country_ID', 'Country Code'], inplace=True)
+    
     processed_data = merged_data.fillna('NA')
 
     columns_to_save = [
