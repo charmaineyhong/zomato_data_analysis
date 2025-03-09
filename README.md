@@ -35,7 +35,7 @@ Follow these steps to run the application locally:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/zomato_data_analysis.git
+git clone https://github.com/charmaineyhong/zomato_data_analysis.git
 ```
 
 ### 2. Navigate to the Project Directory
