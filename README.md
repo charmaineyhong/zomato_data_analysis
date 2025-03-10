@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This Python application assists Steven, a travel blogger, in analyzing restaurant data from Zomato for his food series. It processes and analyzes restaurant data, including details, events, and ratings, to generate insights that enhance travel and food content.
+This Python application analyzes restaurant data from Zomato. It processes and analyzes restaurant data and includes details, events, and ratings, for insights to restaurants. 
 
 ## Data Sources
 
