@@ -27,7 +27,8 @@ The application consists of several modules, each handling specific tasks:
 ### Ratings
 - Analyzes the numeric aggregate ratings.
 - Output is to give a textual rating categories (Excellent, Very Good, Good, Average, Poor) to each of the restaurants based on the numeric aggregate ratings.
-- Documents analysis approach and findings in `restaurant_ratings_analysis.csv`.
+- Documents findings in `restaurant_ratings_analysis.csv`.
+- Analysis approach can be seen in usage examples section
 
 ## Setup Instructions
 
@@ -66,19 +67,31 @@ To individually execute modules:
 ```bash
 python src/restaurant_details.py
 ```
+- If successfully run, " Restaurant details processed and saved successfully." logging will appear in the terminal and output can be found in outputs/restaurant_details.csv
 
 ### Extract Events
 
 ```bash
 python src/event_processor.py
 ```
+- If successfully run, "Event details processed and saved successfully." logging will appear in the terminal and output can be found in outputs/restaurant_events.csv
 
 ### Analyze Ratings
 
 ```bash
 python src/ratings_analyzer.py
 ```
-
+- If successfully run, in the terminal, it will show the computed thresholds which is the calculated 20th, 40th, 60th, and 80th percentiles of the aggregate ratings of the restaurants.
+- Based on these calculated percentiles, each restaurant is categorized into one of five textual rating categories.
+- These are how each ratings are categorized
+Ratings ≤ 4.2: "Poor"
+Ratings > 4.2 and ≤ 4.4: "Average"
+Ratings > 4.4 and ≤ 4.5: "Good"
+Ratings > 4.5 and ≤ 4.6: "Very Good"
+Ratings > 4.6: "Excellent"
+- A rating text of how many restaurants obtained the specific textual rating categories (Excellent, Very Good, Good, Average, Poor) are also given in the logging
+- A successful logging of "Ratings analysis saved to outputs/restaurant_ratings_analysis.csv" will be shown when the module is successfully run.
+  
 ## Testing
 
 Unit tests are in the `tests/` directory. They cover data loading, processing, and analysis functionalities.
@@ -91,11 +104,11 @@ python -m unittest discover -s tests
 
 ## Key Design Decisions
 
-- **Modular Structure**: The project uses separate modules for different functionalities, improving maintainability and readability.
-- **Error Handling**: Implemented try-except blocks to manage exceptions clearly and gracefully.
+- **Modular Structure**: The project uses separate modules for data loading, processing restaurant details, events extraction, and ratings analysis. This separation allows for easier maintenance, testing, and potential future expansion. 
+- **Error Handling**: The code robustly handles errors such as missing files, incorrect JSON structure, and merge issues. This decision was made to ensure that the application can handle real-world data inconsistencies.
 - **Missing Values**: Standardized missing value handling by replacing them with "NA" to ensure consistent data processing.
-- **Focused Field Extraction**: Extracted only necessary fields to simplify data management and enhance clarity.
-- **Comprehensive Testing**: Employed a separate testing strategy with mocks to ensure module reliability.
+- **Mapping & Data Transformation:**: A key requirement was to map country identifiers from JSON to actual country names using an Excel file. This mapping is performed during data merging, and careful consideration was given to data types to avoid merge errors. 
+- **Comprehensive Testing**: Separate testing strategy with mocks was implemented to ensure module reliability.
 
 ## Assumptions Made
 
@@ -143,3 +156,14 @@ Dependencies are listed in the `requirements.txt` file and include:
 
 - pandas
 - openpyxl (for Excel file handling)
+
+## Further Improvements
+
+This application could be further improved to be deployed in the cloud. To do so this application could be deployed as a containerized application using Docker, which encapsulates the Python code—handling data loading, restaurant details extraction, event processing, and ratings analysis—into a consistent, reproducible environment. 
+
+The Docker image would be built from a Dockerfile that installs dependencies from the requirements.txt file and sets the entry point to the main analysis pipeline. This container can then be deployed to AWS or any other platforms
+
+Input data (the JSON and Excel files) can reside in a cloud object storage service separating the storage from compute and ensuring data durability. After processing, output CSV files would be uploaded back to this storage for further analysis. 
+
+
+  
