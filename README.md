@@ -2,14 +2,14 @@
 
 ## Project Overview
 
-This Python application assists Steven, a travel blogger, in analyzing restaurant data from Zomato for his food series. It processes and analyzes various aspects of restaurant data, including details, events, and ratings, to generate insights that enhance travel and food content.
+This Python application assists Steven, a travel blogger, in analyzing restaurant data from Zomato for his food series. It processes and analyzes restaurant data, including details, events, and ratings, to generate insights that enhance travel and food content.
 
 ## Data Sources
 
 The application uses the following provided data files:
 
-- **List of Restaurants**: Contains comprehensive details about each restaurant.
-- **Country Code (Excel format)**: Matches restaurants with their respective country codes.
+- **List of Restaurants**: Contains details about each restaurant.
+- **Country Code**: Shows each country's country codes.
 
 ## Tasks and Modules
 
@@ -21,7 +21,7 @@ The application consists of several modules, each handling specific tasks:
 
 ### Events
 - Processes and extracts events that occurred in April 2019.
-- Extracted fields include Event ID, Restaurant ID, Restaurant Name, Photo URL, Event Title, and Event Dates.
+- Extracted fields are Event ID, Restaurant ID, Restaurant Name, Photo URL, Event Title, and Event Dates.
 - Saves output to `restaurant_events.csv`.
 
 ### Ratings
@@ -66,13 +66,13 @@ To individually execute modules:
 python src/restaurant_details.py
 ```
 
-### Event
+### Extract Events
 
 ```bash
 python src/event_processor.py
 ```
 
-### Ratings
+### Analyze Ratings
 
 ```bash
 python src/ratings_analyzer.py
@@ -80,7 +80,7 @@ python src/ratings_analyzer.py
 
 ## Testing
 
-Unit tests are located in the `tests/` directory. They cover data loading, processing, and analysis functionalities.
+Unit tests are in the `tests/` directory. They cover data loading, processing, and analysis functionalities.
 
 Run all tests using:
 
@@ -107,33 +107,33 @@ python -m unittest discover -s tests
 zomato_data_analysis/
 │
 ├── data/
-│   ├── restaurants.csv            # Raw restaurant details
-│   └── country_codes.xlsx         # Country codes
+│   ├── restaurants.csv            
+│   └── country_codes.xlsx         
 │
 ├── src/
-│   ├── __init__.py                # Package initializer
-│   ├── main.py                    # Executes full analysis
-│   ├── data_loader.py             # Loads and cleans data
-│   ├── restaurant_details.py      # Processes restaurant details
-│   ├── event_processor.py         # Extracts events
-│   └── ratings_analyzer.py        # Analyzes ratings
+│   ├── __init__.py               
+│   ├── main.py                    
+│   ├── data_loader.py             
+│   ├── restaurant_details.py      
+│   ├── event_processor.py         
+│   └── ratings_analyzer.py        
 │
 ├── tests/
-│   ├── __init__.py                # Package initializer for tests
-│   ├── test_data_loader.py        # Tests data loading
-│   ├── test_restaurant_details.py # Tests restaurant detail extraction
-│   ├── test_event_processor.py    # Tests event processing
-│   └── test_ratings_analyzer.py   # Tests ratings analysis
+│   ├── __init__.py                
+│   ├── test_data_loader.py        
+│   ├── test_restaurant_details.py 
+│   ├── test_event_processor.py    
+│   └── test_ratings_analyzer.py   
 │
 ├── outputs/
-│   ├── restaurant_details.csv     # Processed restaurant details
-│   ├── restaurant_events.csv      # Processed event details
+│   ├── restaurant_details.csv     
+│   ├── restaurant_events.csv      
 │   └── restaurant_ratings_analysis.csv      
 │
-│── run.py                         # Run the program
-├── .gitignore                     # Ignored files
-├── README.md                      # Project documentation
-└── requirements.txt               # Python dependencies
+├── run.py                         
+├── .gitignore                     
+├── README.md                      
+└── requirements.txt               
 ```
 
 ## Dependencies
