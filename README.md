@@ -25,8 +25,9 @@ The application consists of several modules, each handling specific tasks:
 - Saves output to `restaurant_events.csv`.
 
 ### Ratings
-- Analyzes the relationship between numeric aggregate ratings and textual rating categories (Excellent, Very Good, Good, Average, Poor).
-- Documents analysis approach and findings.
+- Analyzes the numeric aggregate ratings.
+- Output is to give a textual rating categories (Excellent, Very Good, Good, Average, Poor) to each of the restaurants based on the numeric aggregate ratings.
+- Documents analysis approach and findings in `restaurant_ratings_analysis.csv`.
 
 ## Setup Instructions
 
