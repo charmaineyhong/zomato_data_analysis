@@ -27,7 +27,7 @@ The event processor extracts event-specific details from the restaurant data. It
 ### Ratings Analyzer (ratings_analyzer.py)
 This module analyzes the relationship between numerical aggregate ratings and qualitative rating texts. It reads the processed restaurant details CSV, converts the “User Aggregate Rating” column to a numeric format, and computes quantiles (20th, 40th, 60th, and 80th percentiles) to establish thresholds. Based on these thresholds, each restaurant is assigned a rating text—Poor, Average, Good, Very Good, or Excellent. The analysis not only provides a distribution of these qualitative categories but also documents the approach and insights from the data. The final ratings analysis is saved to a CSV file (restaurant_ratings_analysis.csv).
 
-Further analysis can be seen below in usage instructions 
+Further analysis can be seen below in Usage Examples
 
 ## Setup Instructions
 
