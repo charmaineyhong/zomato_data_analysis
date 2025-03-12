@@ -11,24 +11,23 @@ The application uses the following provided data files:
 - **List of Restaurants**: Contains details about each restaurant.
 - **Country Code**: Shows each country's country codes.
 
-## Tasks and Modules
+## Modules
 
 The application consists of several modules, each handling specific tasks:
 
-### Restaurant Details
-- Extracts details such as Restaurant ID, Name, Country, City, User Rating Votes, User Aggregate Rating, Cuisines, and Event Date.
-- Saves output to `restaurant_details.csv`.
+### Data Loader (data_loader.py)
+This module is responsible for loading and validating the input data. It reads restaurant data from a JSON file and country codes from an Excel file. The data loader includes error handling to catch issues such as missing files or incorrect file formats. It ensures that the raw data is correctly loaded into Pandas DataFrames, ready for further processing.
 
-### Events
-- Processes and extracts events that occurred in April 2019.
-- Extracted fields are Event ID, Restaurant ID, Restaurant Name, Photo URL, Event Title, and Event Dates.
-- Saves output to `restaurant_events.csv`.
+### Restaurant Details (restaurant_details.py)
+This module processes the static restaurant data. It extracts key fields such as Restaurant Id, Restaurant Name, City, User Rating Votes, User Aggregate Rating, Cuisines, and Event Date. Importantly, it also extracts a country identifier from the restaurant’s location. The module then merges this information with the country codes from the Excel file to map each restaurant’s country identifier to its corresponding country name. After handling missing values (by filling with “NA”), the processed data is saved as a CSV file (restaurant_details.csv) for later use.
 
-### Ratings
-- Analyzes the numeric aggregate ratings.
-- Output is to give a textual rating categories (Excellent, Very Good, Good, Average, Poor) to each of the restaurants based on the numeric aggregate ratings.
-- Documents findings in `restaurant_ratings_analysis.csv`.
-- Analysis approach can be seen in usage examples section
+### Events (event_processor.py)
+The event processor extracts event-specific details from the restaurant data. It iterates over each restaurant’s “zomato_events” and extracts event-related fields including Event Id, Restaurant Id, Restaurant Name, Photo URL, Event Title, Event Start Date, and Event End Date. The module converts the event date fields to datetime objects and then filters the events to include only those overlapping with April 2019. The final filtered data is exported as a CSV file (restaurant_events.csv).
+
+### Ratings Analyzer (ratings_analyzer.py)
+This module analyzes the relationship between numerical aggregate ratings and qualitative rating texts. It reads the processed restaurant details CSV, converts the “User Aggregate Rating” column to a numeric format, and computes quantiles (20th, 40th, 60th, and 80th percentiles) to establish thresholds. Based on these thresholds, each restaurant is assigned a rating text—Poor, Average, Good, Very Good, or Excellent. The analysis not only provides a distribution of these qualitative categories but also documents the approach and insights from the data. The final ratings analysis is saved to a CSV file (restaurant_ratings_analysis.csv).
+
+Further analysis can be seen below in usage instructions 
 
 ## Setup Instructions
 
@@ -84,11 +83,11 @@ python src/ratings_analyzer.py
 - If successfully run, in the terminal, it will show the computed thresholds which is the calculated 20th, 40th, 60th, and 80th percentiles of the aggregate ratings of the restaurants.
 - Based on these calculated percentiles, each restaurant is categorized into one of five textual rating categories.
 - These are how each ratings are categorized
-Ratings ≤ 4.2: "Poor"
-Ratings > 4.2 and ≤ 4.4: "Average"
-Ratings > 4.4 and ≤ 4.5: "Good"
-Ratings > 4.5 and ≤ 4.6: "Very Good"
-Ratings > 4.6: "Excellent"
+- Ratings ≤ 4.2: "Poor"
+- Ratings > 4.2 and ≤ 4.4: "Average"
+- Ratings > 4.4 and ≤ 4.5: "Good"
+- Ratings > 4.5 and ≤ 4.6: "Very Good"
+- Ratings > 4.6: "Excellent"
 - A rating text of how many restaurants obtained the specific textual rating categories (Excellent, Very Good, Good, Average, Poor) are also given in the logging
 - A successful logging of "Ratings analysis saved to outputs/restaurant_ratings_analysis.csv" will be shown when the module is successfully run.
   
